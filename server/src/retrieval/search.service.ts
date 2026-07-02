@@ -11,9 +11,16 @@ export async function searchSimilarChunks(question: string) {
 
   const result = await pool.query(
     `
-    SELECT chunk_text
-    FROM document_chunks
-    ORDER BY embedding <=> $1
+    SELECT
+        dc.chunk_text,
+        dc.chunk_index,
+        d.title AS document_title,
+        d.author,
+        d.tradition
+    FROM document_chunks dc
+    JOIN documents d
+        ON dc.document_id = d.id
+    ORDER BY dc.embedding <=> $1
     LIMIT 5;
     `,
     [JSON.stringify(embedding)]

@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import { extractText } from "./document.service";
-import { chunkText } from "../chunks/chunk.service";
-import { generateEmbeddings } from "../embeddings/embedding.service";
-import { storeEmbeddings } from "../retrieval/vector.service";
-import { v4 as uuid } from "uuid";
+import { ingestDocument } from "./document.service";
 
 export const uploadDocument = async (
   req: Request,
@@ -17,24 +13,18 @@ export const uploadDocument = async (
       });
     }
 
-    const data = await extractText(req.file.buffer);
+    const result = await ingestDocument(req.file, {
+      title: req.body.title || req.file.originalname.replace(".pdf", ""),
+      author: req.body.author,
+      tradition: req.body.tradition,
+      language: req.body.language,
+      translator: req.body.translator,
+      description: req.body.description,
+    });
 
-    const chunks = chunkText(data.text);
-
-    const embeddings = await generateEmbeddings(chunks);
-
-    const documentId = uuid();
-
-    await storeEmbeddings(
-        documentId,
-        chunks,
-        embeddings
-    );
-
-    return res.json({
+    return res.status(200).json({
       success: true,
-      documentId,
-      chunks: chunks.length
+      ...result,
     });
 
   } catch (error) {
@@ -42,7 +32,7 @@ export const uploadDocument = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to store embeddings",
+      message: "Failed to ingest document",
     });
   }
 };

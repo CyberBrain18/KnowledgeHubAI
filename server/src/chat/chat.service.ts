@@ -4,17 +4,27 @@ import { generateAnswer } from "../llm/llm.service";
 
 export async function answerQuestion(question: string) {
 
-        console.time("Search");
         const chunks = await searchSimilarChunks(question);
-        console.timeEnd("Search");
 
-        console.time("Prompt");
         const prompt = buildPrompt(question, chunks);
-        console.timeEnd("Prompt");
 
-        console.time("LLM");
         const answer = await generateAnswer(prompt);
-        console.timeEnd("LLM");
 
-    return answer;
+        const sources = [
+        ...new Map(
+            chunks.map(chunk => [
+            chunk.document_title,
+            {
+                title: chunk.document_title,
+                author: chunk.author,
+                tradition: chunk.tradition,
+            },
+            ])
+        ).values(),
+        ];
+
+        return {
+            answer,
+            sources,
+        };
 }
