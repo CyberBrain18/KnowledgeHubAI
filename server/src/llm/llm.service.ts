@@ -1,5 +1,6 @@
 import { Ollama } from "ollama";
 export async function generateAnswer(prompt: string) {
+  throw new Error("VERSION 2 - RAW FETCH");
   console.log("OLLAMA_HOST =", process.env.OLLAMA_HOST);
 
   const response = await fetch(`${process.env.OLLAMA_HOST}/api/chat`, {
