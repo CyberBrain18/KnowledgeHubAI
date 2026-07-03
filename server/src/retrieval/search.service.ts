@@ -1,7 +1,9 @@
-import ollama from "ollama";
+import { ollama } from "../llm/ollama";
 import { pool } from "../db/db";
 
 export async function searchSimilarChunks(question: string) {
+  console.log("Embedding host:", process.env.OLLAMA_HOST);
+
   const response = await ollama.embeddings({
     model: process.env.OLLAMA_EMBEDDING_MODEL!,
     prompt: question,
