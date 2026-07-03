@@ -14,6 +14,7 @@ export async function generateAnswer(prompt: string) {
       },
     ],
   });
+  console.log("OLLAMA_HOST =", process.env.OLLAMA_HOST);
 
   return response.message.content;
 }
