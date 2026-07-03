@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
   Brain,
-  Search,
   Sparkles,
   ShieldCheck,
   ArrowRight,
