@@ -1,6 +1,4 @@
 import { ollama } from './ollama'
-export async function generateAnswer(prompt: string) {
-  console.log("OLLAMA_HOST =", process.env.OLLAMA_HOST);
 
   export async function generateAnswer(prompt: string) {
   const response = await ollama.chat({
