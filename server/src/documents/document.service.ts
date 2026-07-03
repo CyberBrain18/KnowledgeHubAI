@@ -1,4 +1,4 @@
-import { createDocument } from "./document.repository";
+import { createDocument, findAllDocuments } from "./document.repository";
 import { extractText } from "../pdf/pdf.service";
 import { chunkText } from "../chunks/chunk.service";
 import { generateEmbeddings } from "../embeddings/embedding.service";
@@ -40,4 +40,8 @@ export async function ingestDocument(
     document,
     totalChunks: chunks.length,
   };
+}
+
+export async function getDocuments() {
+  return await findAllDocuments();
 }

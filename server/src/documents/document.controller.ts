@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ingestDocument } from "./document.service";
+import { ingestDocument, getDocuments } from "./document.service";
 
 export const uploadDocument = async (
   req: Request,
@@ -33,6 +33,27 @@ export const uploadDocument = async (
     return res.status(500).json({
       success: false,
       message: "Failed to ingest document",
+    });
+  }
+};
+
+export const listDocuments = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const documents = await getDocuments();
+
+    return res.status(200).json({
+      success: true,
+      documents,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch documents",
     });
   }
 };

@@ -41,3 +41,35 @@ export async function createDocument(data: CreateDocumentInput) {
 
   return result.rows[0];
 }
+
+export async function findAllDocuments() {
+  const query = `
+    SELECT
+      d.id,
+      d.title,
+      d.author,
+      d.tradition,
+      d.language,
+      d.translator,
+      d.description,
+      d.uploaded_at,
+      COUNT(c.id)::int AS chunks
+    FROM documents d
+    LEFT JOIN document_chunks c
+      ON d.id = c.document_id
+    GROUP BY
+      d.id,
+      d.title,
+      d.author,
+      d.tradition,
+      d.language,
+      d.translator,
+      d.description,
+      d.uploaded_at
+    ORDER BY d.uploaded_at DESC;
+  `;
+
+  const result = await pool.query(query);
+
+  return result.rows;
+}
